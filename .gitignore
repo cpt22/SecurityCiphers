@@ -131,3 +131,5 @@ dmypy.json
 .idea/
 
 ciphers/ciphers/secrets.py
+
+ciphers/static/
