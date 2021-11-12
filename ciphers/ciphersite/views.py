@@ -1,7 +1,13 @@
+import hashlib
+import hmac
+import json
+import subprocess
+from decouple import config
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponseForbidden
 from django.template import loader
 from .forms import VigenereForm, MD5Form
+
 
 
 def index(request):
@@ -43,9 +49,20 @@ def md5(request):
         form = MD5Form(request.POST, request.FILES)
         if form.is_valid():
             print("Valid form")
-            #print(form.cipher.hash(form.cleaned_data['input']))
     else:
         form = MD5Form()
 
     context = {'form': form}
     return render(request, 'ciphersite/md5.html', context)
+
+
+def ci(request):
+    secret = config('WEBHOOK_SECRET')
+    git_signature = request.META['HTTP_X_SIGNATURE']
+    signature = hmac.new(secret.encode(), request.body, hashlib.sha1)
+    expected_signature = signature.hexdigest()
+    if not hmac.compare_digest(git_signature, expected_signature):
+        return HttpResponseForbidden('Invalid signature header')
+
+    request_body = json.loads(request.body)
+    subprocess.call(['bash', '../post-receive.sh'])

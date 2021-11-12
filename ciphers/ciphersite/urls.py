@@ -7,4 +7,5 @@ urlpatterns = [
     path('des/', views.des, name='des'),
     path('rsa/', views.rsa, name='rsa'),
     path('md5/', views.md5, name='md5'),
+    path('ci/', views.ci, name='ci'),
 ]
