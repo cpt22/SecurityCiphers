@@ -61,6 +61,7 @@ def md5(request):
 @csrf_exempt
 def ci(request):
     secret = config('WEBHOOK_SECRET')
+    return HttpResponse(request.META)
     git_signature = request.META.get('HTTP_X_SIGNATURE')
     signature = hmac.new(secret.encode(), request.body, hashlib.sha1)
     expected_signature = signature.hexdigest()
