@@ -1,3 +1,6 @@
+{% extends 'ciphersite/base.html' %}
+
+{% block content %}
 <form action="{% block action %}{% endblock %}" method="post">
     {% csrf_token %}
     {% block fields_loop %}
@@ -49,3 +52,4 @@
         {% endblock submit_section %}
     </div>
 </form>
+{% endblock content %}

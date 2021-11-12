@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from .forms import VigenereForm
+from .forms import VigenereForm, MD5Form
 
 
 def index(request):
@@ -37,5 +37,14 @@ def rsa(request):
 
 
 def md5(request):
-    context = {}
+    form = None
+    if request.method == 'POST':
+        form = MD5Form(request.POST, request.FILES)
+        if form.is_valid():
+            print("Valid form")
+            #print(form.cipher.hash(form.cleaned_data['input']))
+    else:
+        form = MD5Form()
+
+    context = {'form': form}
     return render(request, 'ciphersite/md5.html', context)
