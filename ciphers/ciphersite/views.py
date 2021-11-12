@@ -87,4 +87,3 @@ def ci(request):
             return HttpResponse("This server does not support landing commits from " + ref)
 
     return HttpResponse("Request was validated, but this event is not handled by the server")
-subprocess.Popen(['bash', '-c', '/home/deploy/SecurityCiphers/ciphers/post-receive.sh', '1', 'master'])
