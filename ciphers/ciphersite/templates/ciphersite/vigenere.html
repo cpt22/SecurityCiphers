@@ -1,1 +1,7 @@
-{% extends "base.html" %}
+{% extends "ciphersite/base.html" %}
+
+{% block title %}Vigenere Cipher{% endblock title %}
+
+{% block content %}
+    {% include "ciphersite/encryption_form.html" %}
+{% endblock content %}

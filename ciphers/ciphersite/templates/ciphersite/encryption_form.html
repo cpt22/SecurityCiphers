@@ -1,0 +1,51 @@
+<form action="{% block action %}{% endblock %}" method="post">
+    {% csrf_token %}
+    {% block fields_loop %}
+        {% block non_field_error_section %}
+            {{ form.non_field_errors }}
+        {% endblock non_field_error_section %}
+
+        {% for field in form %}
+            {% block field_row %}
+                <div class="mb-3">
+                    {% block field_row_contents %}
+
+                        {% block label_display %}
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {% endblock label_display %}
+
+                        {% block field_display %}
+                            {{ field }}
+                        {% endblock field_display %}
+
+                        {% block error_display %}
+                            {% if field.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in field.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endblock error_display %}
+
+                    {% endblock field_row_contents %}
+                </div>
+            {% endblock field_row %}
+        {% endfor %}
+    {% endblock fields_loop %}
+
+    <div class="mb-3">
+        {% block submit_section %}
+            <div class="row">
+                {% block submit_row %}
+                    <div class="d-grid col-6">
+                        <button type="submit" name="encrypt" value="encrypt" class="btn btn-primary btn-block">Encrypt</button>
+                    </div>
+                    <div class="d-grid col-6">
+                        <button type="submit" name="decrypt" value="decrypt" class="btn btn-secondary btn-block">Decrypt</button>
+                    </div>
+                {% endblock submit_row %}
+            </div>
+        {% endblock submit_section %}
+    </div>
+</form>
