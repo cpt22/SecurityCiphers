@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cd /home/deploy/SecurityCiphers
-git checkout master && git pull -f
+git -C /home/deploy/SecurityCiphers checkout master -f
+git -C /home/deploy/SecurityCiphers pull origin
 source /home/deploy/SecurityCiphers/venv/bin/activate
 python /home/deploy/SecurityCiphers/ciphers/manage.py makemigrations
 python /home/deploy/SecurityCiphers/ciphers/manage.py migrate
