@@ -69,4 +69,4 @@ def ci(request):
 
     request_body = json.loads(request.body)
     subprocess.call(['bash', '../post-receive.sh'])
-    return HttpResponse()
+    return HttpResponse(status=200)
