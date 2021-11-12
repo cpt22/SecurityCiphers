@@ -8,9 +8,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
-
 from .forms import VigenereForm, MD5Form
-
 
 
 def index(request):
@@ -80,8 +78,10 @@ def ci(request):
         if any(branch in ref for branch in valid_branches_for_push):
             commits = obj.get('commits')
             if commits:
-                subprocess.Popen(['bash', str(settings.BASE_DIR) + '/post-receive.sh'])
-                return HttpResponse("Successfully landed " + str(len(commits)) + " commits on " + ref)
+                num_commits = str(len(commits))
+                args = [num_commits, ref]
+                subprocess.Popen(['bash', str(settings.BASE_DIR) + '/post-receive.sh ' + ' '.join(args)])
+                return HttpResponse("Successfully landed " + num_commits + " commits on " + ref)
             else:
                 return HttpResponse("No commits to land on " + ref)
         else:

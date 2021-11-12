@@ -33,9 +33,7 @@
                         {% block error_display %}
                             {% if field.errors %}
                                 <div class="invalid-feedback">
-                                    {% for error in field.errors %}
-                                    {{ error }}
-                                    {% endfor %}
+                                    {{ field.errors|break_join|safe }}
                                 </div>
                             {% endif %}
                         {% endblock error_display %}

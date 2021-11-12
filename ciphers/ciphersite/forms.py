@@ -1,5 +1,6 @@
 from django import forms
 from .cipher_classes.vigenere import VigenereCipher
+import re
 
 
 class VigenereForm(forms.Form):
@@ -10,6 +11,7 @@ class VigenereForm(forms.Form):
 
     def clean(self):
         cleaned_data = self.cleaned_data
+        valid_chars_in_fields(self, ['key', 'encrypted_text', 'decrypted_text'])
         if 'encrypt' in self.data:
             fields_required(self, ['key', 'decrypted_text'], "This field is required when encrypting.")
         elif 'decrypt' in self.data:
@@ -74,3 +76,16 @@ def fields_required(form, fields, message="This field is required."):
             msg = forms.ValidationError(message)
             form.add_error(field, msg)
             form.fields[field].widget.attrs['class'] += ' is-invalid'
+
+
+def valid_chars_in_fields(form, fields, message="This field contains invalid characters.",
+                          characters=''.join(chr(i) for i in range(32, 127))):
+    pattern = re.compile('^[' + characters + ']+$')
+    for field in fields:
+        contents = form.cleaned_data.get(field, '')
+        if contents:
+            if not re.search(pattern, contents):
+                msg = forms.ValidationError(message)
+                form.add_error(field, msg)
+                form.fields[field].widget.attrs['class'] += ' is-invalid'
+
