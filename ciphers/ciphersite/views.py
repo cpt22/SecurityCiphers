@@ -62,7 +62,7 @@ def md5(request):
 @csrf_exempt
 def ci(request):
     headers = request.headers
-    if all(header in headers.keys() for header in ['X-Hub-Signature', 'X-Github-Event']):
+    if any(header not in headers.keys() for header in ['X-Hub-Signature', 'X-Github-Event']):
         return HttpResponse('Invalid Request', status=400)
 
     secret = config('WEBHOOK_SECRET')
