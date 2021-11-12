@@ -9,6 +9,7 @@
         {% endblock non_field_error_section %}
 
         {% for field in form %}
+            {% with widget=field.field.widget %}
             {% block field_row %}
                 <div class="mb-3">
                     {% block field_row_contents %}
@@ -17,9 +18,17 @@
                             <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
                         {% endblock label_display %}
 
-                        {% block field_display %}
-                            {{ field }}
-                        {% endblock field_display %}
+                        {% if field.widget_type == 'textarea' %}
+                            <textarea id="{{ field.id_for_label }}"
+                                      name="{{ field.name }}"
+                                      cols="{{ widget.attrs|get_item:'cols' }}"
+                                      rows="{{ widget.attrs|get_item:'rows' }}"
+                                      class="{{ widget.attrs|get_item:'class' }}">{% if field.name in field.form.cleaned_data %}{{ field.form.cleaned_data|get_item:field.name }}{% endif %}</textarea>
+                        {% else %}
+                            {% block field_display %}
+                                {{ field }}
+                            {% endblock field_display %}
+                        {% endif %}
 
                         {% block error_display %}
                             {% if field.errors %}
@@ -34,6 +43,7 @@
                     {% endblock field_row_contents %}
                 </div>
             {% endblock field_row %}
+            {% endwith %}
         {% endfor %}
     {% endblock fields_loop %}
 

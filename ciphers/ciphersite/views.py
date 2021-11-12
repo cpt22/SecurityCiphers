@@ -17,15 +17,12 @@ def vigenere(request):
         if form.is_valid():
             if 'encrypt' in vals:
                 ciphertext = form.cipher.encrypt(form.cleaned_data['key'], form.cleaned_data['decrypted_text'])
-                form.fields['encrypted_text'].initial = ciphertext
-                print(form.fields['encrypted_text'].widget)
+                form.cleaned_data['encrypted_text'] = ciphertext
             elif 'decrypt' in vals:
-                form.fields['decrypted_text'].initial = form.cipher.decrypt(form.cleaned_data['key'],
-                                                                          form.cleaned_data['encrypted_text'])
-                print(form)
+                ciphertext = form.cipher.decrypt(form.cleaned_data['key'], form.cleaned_data['encrypted_text'])
+                form.cleaned_data['decrypted_text'] = ciphertext
     else:
         form = VigenereForm()
-    #print("Field Value: " + form.fields['encrypted_text'].value)
     context = {'form': form}
     return render(request, 'ciphersite/vigenere.html', context)
 

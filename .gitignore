@@ -133,3 +133,5 @@ dmypy.json
 ciphers/ciphers/secrets.py
 
 ciphers/static/
+
+venv/*
