@@ -81,7 +81,7 @@ def ci(request):
             commits = obj.get('commits')
             if commits:
                 subprocess.Popen(['bash', str(settings.BASE_DIR) + '/post-receive.sh'])
-                return HttpResponse("Successfully landed " + len(commits) + " commits on " + ref)
+                return HttpResponse("Successfully landed " + str(len(commits)) + " commits on " + ref)
             else:
                 return HttpResponse("No commits to land on " + ref)
         else:
