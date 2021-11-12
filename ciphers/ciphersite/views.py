@@ -79,8 +79,7 @@ def ci(request):
             commits = obj.get('commits')
             if commits:
                 num_commits = str(len(commits))
-                args = [num_commits, ref]
-                subprocess.Popen(['bash', '-c', '"' + str(settings.BASE_DIR) + '/post-receive.sh ' + ' '.join(args) + '"'])
+                subprocess.Popen(['bash', '-c', str(settings.BASE_DIR) + '/post-receive.sh', num_commits, ref])
                 return HttpResponse("Successfully landed " + num_commits + " commits on " + ref)
             else:
                 return HttpResponse("No commits to land on " + ref)
@@ -88,3 +87,4 @@ def ci(request):
             return HttpResponse("This server does not support landing commits from " + ref)
 
     return HttpResponse("Request was validated, but this event is not handled by the server")
+subprocess.Popen(['bash', '-c', '/home/deploy/SecurityCiphers/ciphers/post-receive.sh', '1', 'master'])
