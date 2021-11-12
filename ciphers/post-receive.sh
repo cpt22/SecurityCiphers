@@ -1,5 +1,4 @@
 #!/bin/bash
-
 git -C /home/deploy/SecurityCiphers checkout master -f
 git -C /home/deploy/SecurityCiphers pull origin
 source /home/deploy/SecurityCiphers/venv/bin/activate
