@@ -134,4 +134,5 @@ ciphers/ciphers/secrets.py
 
 ciphers/static/
 
-venv/*
+venv/
+venv
