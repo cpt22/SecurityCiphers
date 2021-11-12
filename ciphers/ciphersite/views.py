@@ -6,6 +6,8 @@ from decouple import config
 from django.shortcuts import render
 from django.http import HttpResponseForbidden
 from django.template import loader
+from django.views.decorators.csrf import csrf_exempt
+
 from .forms import VigenereForm, MD5Form
 
 
@@ -56,6 +58,7 @@ def md5(request):
     return render(request, 'ciphersite/md5.html', context)
 
 
+@csrf_exempt
 def ci(request):
     secret = config('WEBHOOK_SECRET')
     git_signature = request.META['HTTP_X_SIGNATURE']
