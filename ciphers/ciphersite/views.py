@@ -76,8 +76,8 @@ def ci(request):
     obj = json.loads(request.body)
     if event_type == 'push':
         valid_branches_for_push = ['master']
-        if any(branch in obj.ref for branch in valid_branches_for_push):
+        if any(branch in obj.get('ref') for branch in valid_branches_for_push):
             subprocess.Popen(['bash', str(settings.BASE_DIR) + '/post-receive.sh'])
-            return HttpResponse("Successfully updated from " + obj.ref)
+            return HttpResponse("Successfully updated from " + obj.get('ref'))
 
     return HttpResponse("Request was validated, but this event is not handled by the server", status=200)
