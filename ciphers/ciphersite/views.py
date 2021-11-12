@@ -4,7 +4,7 @@ import json
 import subprocess
 from decouple import config
 from django.shortcuts import render
-from django.http import HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 
@@ -69,3 +69,4 @@ def ci(request):
 
     request_body = json.loads(request.body)
     subprocess.call(['bash', '../post-receive.sh'])
+    return HttpResponse()
