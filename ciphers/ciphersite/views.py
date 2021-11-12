@@ -76,8 +76,15 @@ def ci(request):
     obj = json.loads(request.body)
     if event_type == 'push':
         valid_branches_for_push = ['master']
-        if any(branch in obj.get('ref') for branch in valid_branches_for_push):
-            subprocess.Popen(['bash', str(settings.BASE_DIR) + '/post-receive.sh'])
-            return HttpResponse("Successfully updated from " + obj.get('ref'))
+        ref = obj.get('ref')
+        if any(branch in ref for branch in valid_branches_for_push):
+            commits = obj.get('commits')
+            if commits:
+                subprocess.Popen(['bash', str(settings.BASE_DIR) + '/post-receive.sh'])
+                return HttpResponse("Successfully landed " + len(commits) + " commits on " + ref)
+            else:
+                return HttpResponse("No commits to land on " + ref)
+        else:
+            return HttpResponse("This server does not support landing commits on " + ref)
 
-    return HttpResponse("Request was validated, but this event is not handled by the server", status=200)
+    return HttpResponse("Request was validated, but this event is not handled by the server")
