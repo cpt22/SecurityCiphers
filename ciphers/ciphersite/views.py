@@ -2,6 +2,7 @@ import hashlib
 import hmac
 import json
 import subprocess
+from ciphers import settings
 from decouple import config
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
@@ -60,14 +61,23 @@ def md5(request):
 
 @csrf_exempt
 def ci(request):
+    headers = request.headers
+    if {'X-Hub-Signature', 'X-Github-Event'} >= headers.keys():
+        return HttpResponse('Invalid Request', status=400)
+
     secret = config('WEBHOOK_SECRET')
-    return HttpResponse(request.META)
-    git_signature = request.META.get('HTTP_X_SIGNATURE')
+    git_signature = headers.get('X-Hub-Signature').replace("sha1=", "")
     signature = hmac.new(secret.encode(), request.body, hashlib.sha1)
     expected_signature = signature.hexdigest()
     if not hmac.compare_digest(git_signature, expected_signature):
         return HttpResponseForbidden('Invalid signature header')
 
-    request_body = json.loads(request.body)
-    subprocess.call(['bash', '../post-receive.sh'])
-    return HttpResponse(status=200)
+    event_type = headers["X-Github-Event"]
+    obj = json.loads(request.body)
+    if event_type == 'push':
+        valid_branches_for_push = ['master']
+        if any(branch in obj.ref for branch in valid_branches_for_push):
+            subprocess.Popen(['bash', str(settings.BASE_DIR) + '/post-receive.sh'])
+            return HttpResponse("Successfully updated from " + obj.ref)
+
+    return HttpResponse("Request was validated, but this event is not handled by the server", status=200)
