@@ -62,7 +62,7 @@ def md5(request):
 @csrf_exempt
 def ci(request):
     headers = request.headers
-    if {'X-Hub-Signature', 'X-Github-Event'} >= headers.keys():
+    if all(header in headers.keys() for header in ['X-Hub-Signature', 'X-Github-Event']):
         return HttpResponse('Invalid Request', status=400)
 
     secret = config('WEBHOOK_SECRET')
@@ -85,6 +85,6 @@ def ci(request):
             else:
                 return HttpResponse("No commits to land on " + ref)
         else:
-            return HttpResponse("This server does not support landing commits on " + ref)
+            return HttpResponse("This server does not support landing commits from " + ref)
 
     return HttpResponse("Request was validated, but this event is not handled by the server")
