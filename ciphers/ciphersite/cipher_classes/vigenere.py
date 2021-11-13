@@ -6,7 +6,7 @@ class VigenereCipher:
         self.chars = constants.printable_ascii
         self.manip = self.chars
         self.grid = [self.manip]
-        for i in range(94):
+        for i in range(len(self.chars) - 1):
             first = self.manip[0]
             self.manip = self.manip[1:] + first
             self.grid.append(self.manip)

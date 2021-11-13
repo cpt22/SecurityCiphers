@@ -12,10 +12,11 @@ class VigenereForm(forms.Form):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        valid_chars_in_fields(self, ['key', 'encrypted_text', 'decrypted_text'])
         if 'encrypt' in self.data:
+            valid_chars_in_fields(self, ['key', 'decrypted_text'])
             fields_required(self, ['key', 'decrypted_text'], "This field is required when encrypting.")
         elif 'decrypt' in self.data:
+            valid_chars_in_fields(self, ['key', 'encrypted_text'])
             fields_required(self, ['key', 'encrypted_text'], "This field is required when decrypting.")
         else:
             self.add_error('', "Missing submit type")
