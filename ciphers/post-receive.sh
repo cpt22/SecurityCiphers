@@ -16,7 +16,8 @@ python /home/deploy/SecurityCiphers/ciphers/manage.py migrate
 echo "Collecting static files"
 python /home/deploy/SecurityCiphers/ciphers/manage.py collectstatic --noinput
 
+echo "Landed $1 commits on $2 at $(date)" >> /home/deploy/webhook_log.txt
+
 echo "Restarting site uWSGI"
 sudo /bin/systemctl restart ciphersite
 
-echo "Landed $1 commits on $2 at $(date)" >> /home/deploy/webhook_log.txt
