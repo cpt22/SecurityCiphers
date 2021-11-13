@@ -1,7 +1,9 @@
 {% extends 'ciphersite/base.html' %}
 
 {% block content %}
-<form action="{% block action %}{% endblock %}" method="post">
+{% block form_tag %}
+<form action="{% block action %}{% endblock %}" method="post" {% block form_tag_params %}{% endblock %}>
+{% endblock form_tag %}
     {% csrf_token %}
     {% block fields_loop %}
         {% block non_field_error_section %}
@@ -21,9 +23,9 @@
                         {% if field.widget_type == 'textarea' %}
                             <textarea id="{{ field.id_for_label }}"
                                       name="{{ field.name }}"
-                                      cols="{{ widget.attrs|get_item:'cols' }}"
-                                      rows="{{ widget.attrs|get_item:'rows' }}"
-                                      class="{{ widget.attrs|get_item:'class' }}">{{ field.form|get_field_data:field.name }}</textarea>
+                                      {% for attr, value in widget.attrs.items %}
+                                          {{ attr }}="{{ value }}"
+                                      {% endfor %}>{{ field.form|get_field_data:field.name }}</textarea>
                         {% else %}
                             {% block field_display %}
                                 {{ field }}

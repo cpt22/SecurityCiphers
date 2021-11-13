@@ -56,19 +56,21 @@ class RSAForm(forms.Form):
 
 
 class MD5Form(forms.Form):
-    input_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
+    input_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '4',
+                                                                              'class': 'form-control'}))
     input_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
-    output_hash = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
+    output_hash = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '2',
+                                                                               'class': 'form-control',
                                                                                'readonly': 'readonly'}))
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        print(cleaned_data)
-        print(self.data)
-        if 'hash' in self.data:
+        if cleaned_data.get('input_text', ''):
+            pass
+        elif cleaned_data.get('input_file') is not None:
             pass
         else:
-            self.add_error('', "Missing submit type")
+            self.add_error('', "At least one input field must be filled out.")
         return cleaned_data
 
 

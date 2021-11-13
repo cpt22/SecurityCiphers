@@ -2,6 +2,10 @@
 
 {% block title %}MD5 Cipher{% endblock title %}
 
+{% block form_tag_params %}
+    enctype="multipart/form-data"
+{% endblock form_tag_params %}
+
 {% block submit_row %}
     <div class="d-grid">
         <button type="submit" name="hash" value="hash" class="btn btn-primary btn-block">Hash</button>

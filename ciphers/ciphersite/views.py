@@ -49,7 +49,12 @@ def md5(request):
     if request.method == 'POST':
         form = MD5Form(request.POST, request.FILES)
         if form.is_valid():
-            print("Valid form")
+            if form.cleaned_data.get('input_text'):
+                print(str.encode(form.cleaned_data.get('input_text')))
+            elif form.cleaned_data.get('input_file'):
+                print(request.FILES.get('input_file').read())
+            else:
+                return HttpResponse('Invalid Request', status=400)
     else:
         form = MD5Form()
 
