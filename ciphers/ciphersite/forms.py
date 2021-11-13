@@ -1,5 +1,6 @@
 from django import forms
 from .cipher_classes.vigenere import VigenereCipher
+from . import constants
 import re
 
 
@@ -78,8 +79,7 @@ def fields_required(form, fields, message="This field is required."):
             form.fields[field].widget.attrs['class'] += ' is-invalid'
 
 
-def valid_chars_in_fields(form, fields, message="This field contains invalid characters.",
-                          characters=''.join(chr(i) for i in range(32, 127))):
+def valid_chars_in_fields(form, fields, message="This field contains invalid characters.", characters=' -~\t\r\n'):
     pattern = re.compile('^[' + characters + ']+$')
     for field in fields:
         contents = form.cleaned_data.get(field, '')

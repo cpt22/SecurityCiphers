@@ -1,27 +1,15 @@
-import string
-
+from .. import constants
 
 class VigenereCipher:
     # create  ASCII charset and Vigenere square
-
     def __init__(self):
-        self.chars = ''.join(chr(i) for i in range(32, 127))
+        self.chars = constants.printable_ascii
         self.manip = self.chars
         self.grid = [self.manip]
         for i in range(94):
             first = self.manip[0]
             self.manip = self.manip[1:] + first
             self.grid.append(self.manip)
-
-    # sample A-Z charset and vigenere square for testing purposes
-    # chars = string.ascii_uppercase
-    # manip = chars
-    # grid = []
-    # grid.append(manip)
-    # for i in range(25):
-    #     first = manip[0]
-    #     manip = manip[1:]+first
-    #     grid.append(manip)
 
     # generate key of adequate length
     def genKey(self, key, ptext):
@@ -61,11 +49,3 @@ class VigenereCipher:
             if letter == cchar:
                 return i
             i = i + 1
-
-    # old sample method to get raw inputs for testing.
-    # def getAnswers():
-    #     pt = raw_input("plaintext:")
-    #     key = raw_input("key:")
-    #     print(encrypt(key, pt))
-    #     print(decrypt(key, "svs"))
-    #     #print(decrypt('lpon' , r'nrq'))
