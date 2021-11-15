@@ -25,8 +25,15 @@ class VigenereForm(forms.Form):
 
 class DESForm(forms.Form):
     key = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    decrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
-    encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
+    CHOICES = [('text', 'Text Input'),
+               ('file', 'File Input')]
+    input_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': 'form-check-input'}))
+    decrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '5',
+                                                                              'class': 'form-control'}))
+    decrypted_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+    encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '5',
+                                                                              'class': 'form-control'}))
+    encrypted_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -56,6 +63,9 @@ class RSAForm(forms.Form):
 
 
 class MD5Form(forms.Form):
+    CHOICES = [('text', 'Text Input'),
+               ('file', 'File Input')]
+    input_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': 'form-check-input'}))
     input_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '4',
                                                                               'class': 'form-control'}))
     input_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))

@@ -14,5 +14,9 @@ def get_item(dictionary, key):
     return dictionary.get(key)
 
 @register.filter
+def index(indexable, i):
+    return indexable[i]
+
+@register.filter
 def break_join(lis):
     return '<br>'.join(lis)

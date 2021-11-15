@@ -1,3 +1,26 @@
 {% extends 'ciphersite/encryption_form.html' %}
 
 {% block title %}DES Cipher{% endblock title %}
+
+{% block script_section %}
+<script>
+    $(document).ready(function() {
+        $("#id_decrypted_file_container").hide();
+        $("#id_encrypted_file_container").hide();
+
+        $('input[type=radio][name=input_type]').change(function() {
+            if ($(this).val() === 'file') {
+                $("#id_decrypted_file_container").show();
+                $("#id_encrypted_file_container").show();
+                $("#id_decrypted_text_container").hide();
+                $("#id_encrypted_text_container").hide();
+            } else {
+                $("#id_decrypted_file_container").hide();
+                $("#id_encrypted_file_container").hide();
+                $("#id_decrypted_text_container").show();
+                $("#id_encrypted_text_container").show();
+            }
+        });
+    });
+</script>
+{% endblock script_section %}

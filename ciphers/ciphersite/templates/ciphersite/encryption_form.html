@@ -10,26 +10,41 @@
             {{ form.non_field_errors }}
         {% endblock non_field_error_section %}
 
+        {% block before_fields %}{% endblock before_fields %}
+
         {% for field in form %}
             {% with widget=field.field.widget %}
             {% block field_row %}
-                <div class="mb-3">
+                <div id="{{ field.auto_id }}_container" class="mb-3">
                     {% block field_row_contents %}
+                        {% if field.widget_type == 'radioselect' %}
+                            {% for choice in field.field.choices %}
+                                <div class="form-check">
+                                    <input type="radio"
+                                           class="form-check-input"
+                                           name="{{ field.name }}"
+                                           id="{{ field.auto_id }}_{{ choice.0 }}"
+                                           value="{{ choice.0 }}"
+                                           {% if field.data == choice.0 %}checked{% endif %}/>
+                                    <label for="{{ field.auto_id }}_{{ choice.0 }}" class="form-check-label">{{ choice.1 }}</label>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            {% block label_display %}
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            {% endblock label_display %}
 
-                        {% block label_display %}
-                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                        {% endblock label_display %}
-
-                        {% if field.widget_type == 'textarea' %}
-                            <textarea id="{{ field.id_for_label }}"
+                            {% if field.widget_type == 'textarea' %}
+                                <textarea id="{{ field.id_for_label }}"
                                       name="{{ field.name }}"
                                       {% for attr, value in widget.attrs.items %}
                                           {{ attr }}="{{ value }}"
                                       {% endfor %}>{{ field.form|get_field_data:field.name }}</textarea>
-                        {% else %}
-                            {% block field_display %}
-                                {{ field }}
-                            {% endblock field_display %}
+                            {% else %}
+                                {% block field_display %}
+                                    {{ field }}
+                                {% endblock field_display %}
+                            {% endif %}
                         {% endif %}
 
                         {% block error_display %}
@@ -46,6 +61,8 @@
             {% endwith %}
         {% endfor %}
     {% endblock fields_loop %}
+
+    {% block after_fields %}{% endblock after_fields %}
 
     <div class="mb-3">
         {% block submit_section %}

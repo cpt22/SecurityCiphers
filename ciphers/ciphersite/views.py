@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
-from .forms import VigenereForm, MD5Form
+from .forms import VigenereForm, DESForm, MD5Form
 
 
 def index(request):
@@ -35,7 +35,11 @@ def vigenere(request):
 
 
 def des(request):
-    context = {}
+    #if request.method == 'POST':
+    #else:
+    form = DESForm({'input_type': 'text'})
+
+    context = {'form': form}
     return render(request, 'ciphersite/des.html', context)
 
 
@@ -56,7 +60,7 @@ def md5(request):
             else:
                 return HttpResponse('Invalid Request', status=400)
     else:
-        form = MD5Form()
+        form = MD5Form({'input_type': 'text'})
 
     context = {'form': form}
     return render(request, 'ciphersite/md5.html', context)
