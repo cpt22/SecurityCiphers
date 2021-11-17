@@ -6,8 +6,8 @@ class RSA_Cipher:
         self.p, self.q, self.m, self.phi_m, self.encryption_val, self.decryption_val, self.private_key, self.public_key = self.generate_values()
 
     def generate_values(self):
-        p = self.generate_primes_in_range(12, 20)  ## Idk how we want the user to generate random primes. Do they pick random primes?
-        q = self.generate_primes_in_range(8, 12)
+        p = self.generate_primes_in_range(100, 200)  ## Idk how we want the user to generate random primes. Do they pick random primes?
+        q = self.generate_primes_in_range(201, 300)
         m = p * q
         phi_m = (p - 1) * (q - 1)
         encryption_val = self.generate_encryption_val(m, phi_m)  # coprime with m and phi_m
