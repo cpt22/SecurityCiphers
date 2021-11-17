@@ -40,6 +40,13 @@
                                       {% for attr, value in widget.attrs.items %}
                                           {{ attr }}="{{ value }}"
                                       {% endfor %}>{{ field.form|get_field_data:field.name }}</textarea>
+                            {% elif field.widget_type == 'text' %}
+                                <input type="text"
+                                       name="{{ field.name }}"
+                                       {% for attr, value in widget.attrs.items %}
+                                            {{ attr }}="{{ value }}"
+                                       {% endfor %}
+                                        value="{{ field.form|get_field_data:field.name }}">
                             {% else %}
                                 {% block field_display %}
                                     {{ field }}
@@ -59,6 +66,8 @@
                 </div>
             {% endblock field_row %}
             {% endwith %}
+
+            {% block insert_block_after_field %}{% endblock insert_block_after_field %}
         {% endfor %}
     {% endblock fields_loop %}
 

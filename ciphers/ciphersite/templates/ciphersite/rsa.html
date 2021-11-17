@@ -1,3 +1,11 @@
 {% extends 'ciphersite/encryption_form.html' %}
 
 {% block title %}RSA Cipher{% endblock title %}
+
+{% block insert_block_after_field %}
+    {% if field.name == 'private_key' %}
+        <div class="mb-3">
+            <button type="submit" name="generate_keys" value="generate_keys" class="btn btn-sm btn-primary btn-block">Generate New Keys</button>
+        </div>
+    {% endif %}
+{% endblock insert_block_after_field %}

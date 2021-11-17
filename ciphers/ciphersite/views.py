@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseForbidden
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
-from .forms import VigenereForm, DESForm, MD5Form
+from .forms import VigenereForm, DESForm, MD5Form, RSAForm
 
 
 def index(request):
@@ -17,7 +17,6 @@ def index(request):
 
 
 def vigenere(request):
-    form = None
     if request.method == 'POST':
         vals = request.POST
         form = VigenereForm(vals)
@@ -44,12 +43,31 @@ def des(request):
 
 
 def rsa(request):
-    context = {}
+    if request.method == 'POST':
+        vals = request.POST
+        form = RSAForm(vals)
+        if form.is_valid():
+            if 'generate_keys' in vals:
+                private_key, public_key = form.cipher.generate_keys()
+                print(private_key)
+                print(public_key)
+                form.cleaned_data['private_key'] = f"{private_key[0]},{private_key[1]}"
+                form.cleaned_data['public_key'] = f"{public_key[0]},{public_key[1]}"
+            elif 'encrypt' in vals:
+                key_parts = [int(x.strip()) for x in form.cleaned_data['public_key'].split(',')]
+                ciphertext = form.cipher.encrypt(str.encode(form.cleaned_data['decrypted_text']), key_parts)
+                form.cleaned_data['encrypted_text'] = ciphertext
+            elif 'decrypt' in vals:
+                key_parts = [int(x.strip()) for x in form.cleaned_data['private_key'].split(',')]
+                ciphertext = form.cipher.decrypt(str.encode(form.cleaned_data['encrypted_text']), key_parts)
+                form.cleaned_data['decrypted_text'] = ciphertext
+    else:
+        form = RSAForm()
+    context = {'form': form}
     return render(request, 'ciphersite/rsa.html', context)
 
 
 def md5(request):
-    form = None
     if request.method == 'POST':
         form = MD5Form(request.POST, request.FILES)
         if form.is_valid():
@@ -88,11 +106,11 @@ def ci(request):
             commits = obj.get('commits')
             if commits:
                 num_commits = str(len(commits))
-                subprocess.Popen([str(settings.BASE_DIR) + '/post-receive.sh', num_commits, ref])
-                return HttpResponse("Successfully landed " + num_commits + " commits on " + ref)
+                subprocess.Popen([f"{str(settings.BASE_DIR)}/post-receive.sh", num_commits, ref])
+                return HttpResponse(f"Successfully landed {num_commits} commits on {ref}")
             else:
-                return HttpResponse("No commits to land on " + ref)
+                return HttpResponse(f"No commits to land on {ref}")
         else:
-            return HttpResponse("This server does not support landing commits from " + ref)
+            return HttpResponse(f"This server does not support landing commits from {ref}")
 
     return HttpResponse("Request was validated, but this event is not handled by the server")
