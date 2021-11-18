@@ -2,6 +2,7 @@ import hashlib
 import hmac
 import json
 import subprocess
+import random
 from ciphers import settings
 from decouple import config
 from django.shortcuts import render
@@ -16,6 +17,8 @@ def index(request):
     return render(request, 'ciphersite/index.html', context)
 
 
+##
+# Vigenere encryption/decryption page
 def vigenere(request):
     if request.method == 'POST':
         vals = request.POST
@@ -33,15 +36,30 @@ def vigenere(request):
     return render(request, 'ciphersite/vigenere.html', context)
 
 
+##
+# DES encryption/decryption page
 def des(request):
-    #if request.method == 'POST':
-    #else:
-    form = DESForm({'input_type': 'text'})
+    if request.method == 'POST':
+        vals = request.POST
+        form = DESForm(request.POST, request.FILES)
+        if form.is_valid():
+            if 'generate_key' in vals:
+                form.cleaned_data['key'] = f'PLACEHOLDER_KEY_{random.randint(10000,99999)}'
+            elif 'encrypt' in vals:
+                print("encrypt")
+            elif 'decrypt' in vals:
+                print("decrypt")
+            else:
+                return HttpResponse('Invalid Request', status=400)
+    else:
+        form = DESForm({'input_type': 'text'})
 
     context = {'form': form}
     return render(request, 'ciphersite/des.html', context)
 
 
+##
+# RSA encryption/decryption page
 def rsa(request):
     if request.method == 'POST':
         vals = request.POST
@@ -49,8 +67,6 @@ def rsa(request):
         if form.is_valid():
             if 'generate_keys' in vals:
                 private_key, public_key = form.cipher.generate_keys()
-                print(private_key)
-                print(public_key)
                 form.cleaned_data['private_key'] = f"{private_key[0]},{private_key[1]}"
                 form.cleaned_data['public_key'] = f"{public_key[0]},{public_key[1]}"
             elif 'encrypt' in vals:
@@ -67,14 +83,16 @@ def rsa(request):
     return render(request, 'ciphersite/rsa.html', context)
 
 
+##
+# MD5 hash page
 def md5(request):
     if request.method == 'POST':
         form = MD5Form(request.POST, request.FILES)
-        if form.is_valid():
+        if form.is_valid() and form.cleaned_data.get('hash'):
             if form.cleaned_data.get('input_text'):
                 print(str.encode(form.cleaned_data.get('input_text')))
             elif form.cleaned_data.get('input_file'):
-                print(request.FILES.get('input_file').read())
+                print(bytearray(request.FILES.get('input_file').read()))
             else:
                 return HttpResponse('Invalid Request', status=400)
     else:
@@ -84,6 +102,8 @@ def md5(request):
     return render(request, 'ciphersite/md5.html', context)
 
 
+##
+# Handle the continuous deployment endpoint
 @csrf_exempt
 def ci(request):
     headers = request.headers

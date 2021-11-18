@@ -2,11 +2,24 @@
 
 {% block title %}DES Cipher{% endblock title %}
 
+{% block insert_block_after_field %}
+    {% if field.name == 'key' %}
+        <div class="mb-3">
+            <button type="submit" name="generate_key" value="generate_key" class="btn btn-sm btn-primary btn-block">Generate Key</button>
+        </div>
+    {% endif %}
+{% endblock insert_block_after_field %}
+
 {% block script_section %}
 <script>
     $(document).ready(function() {
-        $("#id_decrypted_file_container").hide();
-        $("#id_encrypted_file_container").hide();
+        if ($('input[type=radio][name=input_type]:checked').val() === 'file') {
+            $("#id_decrypted_text_container").hide();
+            $("#id_encrypted_text_container").hide();
+        } else {
+            $("#id_decrypted_file_container").hide();
+            $("#id_encrypted_file_container").hide();
+        }
 
         $('input[type=radio][name=input_type]').change(function() {
             if ($(this).val() === 'file') {

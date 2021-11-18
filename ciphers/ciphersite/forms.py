@@ -38,10 +38,13 @@ class DESForm(forms.Form):
 
     def clean(self):
         cleaned_data = self.cleaned_data
+        input_type = cleaned_data.get('input_type', 'text')
         if 'encrypt' in self.data:
-            fields_required(self, ['key', 'decrypted_text'], "This field is required when encrypting.")
+            fields_required(self, ['key', f'decrypted_{input_type}'], "This field is required when encrypting.")
         elif 'decrypt' in self.data:
-            fields_required(self, ['key', 'encrypted_text'], "This field is required when decrypting.")
+            fields_required(self, ['key', f'encrypted_{input_type}'], "This field is required when decrypting.")
+        elif 'generate_key' in self.data:
+            pass
         else:
             self.add_error('', "Missing submit type")
         return cleaned_data
@@ -84,12 +87,15 @@ class MD5Form(forms.Form):
 
     def clean(self):
         cleaned_data = self.cleaned_data
-        if cleaned_data.get('input_text', ''):
-            pass
-        elif cleaned_data.get('input_file') is not None:
-            pass
-        else:
-            self.add_error('', "At least one input field must be filled out.")
+        if self.data.get('hash'):
+            input_type = cleaned_data.get('input_type', 'text')
+            fields_required(self, [f'input_{input_type}'], "This field is required when hashing.")
+            if input_type == 'text':
+                print('temp text')
+            elif input_type == 'file':
+                print('temp file)')
+            else:
+                self.add_error('', "At least one input field must be filled out.")
         return cleaned_data
 
 

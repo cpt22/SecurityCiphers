@@ -31,7 +31,11 @@
 {% block script_section %}
 <script>
     $(document).ready(function() {
-        $("#id_input_file_container").hide();
+        if ($('input[type=radio][name=input_type]:checked').val() === 'file') {
+            $("#id_input_text_container").hide();
+        } else {
+            $("#id_input_file_container").hide();
+        }
 
         $('input[type=radio][name=input_type]').change(function() {
             if ($(this).val() === 'file') {
