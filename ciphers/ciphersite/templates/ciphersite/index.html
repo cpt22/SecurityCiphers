@@ -1,1 +1,8 @@
 {% extends "ciphersite/base.html" %}
+
+{% block content %}
+    <a href="{% url 'vigenere' %}">Vigenere Cipher</a><br>
+    <a href="{% url 'des' %}">DES Encryption</a><br>
+    <a href="{% url 'rsa' %}">RSA Encryption</a><br>
+    <a href="{% url 'md5' %}">MD5 Hash</a>
+{% endblock content %}

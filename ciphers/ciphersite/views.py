@@ -42,6 +42,7 @@ def des(request):
     if request.method == 'POST':
         vals = request.POST
         form = DESForm(request.POST, request.FILES)
+        print("test")
         if form.is_valid():
             if 'generate_key' in vals:
                 form.cleaned_data['key'] = f'PLACEHOLDER_KEY_{random.randint(10000,99999)}'

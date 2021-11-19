@@ -46,7 +46,7 @@ class DESForm(forms.Form):
         elif 'generate_key' in self.data:
             pass
         else:
-            self.add_error('', "Missing submit type")
+            pass
         return cleaned_data
 
 
