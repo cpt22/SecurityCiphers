@@ -3,6 +3,7 @@ import hmac
 import json
 import subprocess
 import random
+import base64
 from ciphers import settings
 from decouple import config
 from django.shortcuts import render
@@ -72,11 +73,11 @@ def rsa(request):
                 form.cleaned_data['public_key'] = f"{public_key[0]},{public_key[1]}"
             elif 'encrypt' in vals:
                 key_parts = [int(x.strip()) for x in form.cleaned_data['public_key'].split(',')]
-                ciphertext = form.cipher.encrypt(str.encode(form.cleaned_data['decrypted_text']), key_parts)
+                ciphertext = form.cipher.encrypt(form.cleaned_data['decrypted_text'], key_parts)
                 form.cleaned_data['encrypted_text'] = ciphertext
             elif 'decrypt' in vals:
                 key_parts = [int(x.strip()) for x in form.cleaned_data['private_key'].split(',')]
-                ciphertext = form.cipher.decrypt(str.encode(form.cleaned_data['encrypted_text']), key_parts)
+                ciphertext = form.cipher.decrypt(form.cleaned_data['encrypted_text'], key_parts)
                 form.cleaned_data['decrypted_text'] = ciphertext
     else:
         form = RSAForm()

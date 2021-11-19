@@ -63,6 +63,7 @@ class RSAForm(forms.Form):
             fields_required(self, ['public_key', 'decrypted_text'], "This field is required when encrypting.")
         elif 'decrypt' in self.data:
             fields_required(self, ['private_key', 'encrypted_text'], "This field is required when decrypting.")
+            valid_chars_in_fields(self, ['encrypted_text'], characters='0-9,')
         elif 'generate_keys' in self.data:
             pass
         else:
