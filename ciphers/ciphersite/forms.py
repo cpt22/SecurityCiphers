@@ -1,6 +1,7 @@
 from django import forms
 from .cipher_classes.vigenere import VigenereCipher
 from .cipher_classes.rsa import RSACipher
+from .cipher_classes.des import DESCipher
 from . import constants
 import re
 
@@ -25,6 +26,7 @@ class VigenereForm(forms.Form):
 
 
 class DESForm(forms.Form):
+    cipher = DESCipher()
     key = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     CHOICES = [('text', 'Text Input'),
                ('file', 'File Input')]
