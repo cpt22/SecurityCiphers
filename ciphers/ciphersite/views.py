@@ -95,13 +95,17 @@ def rsa(request):
 def md5(request):
     if request.method == 'POST':
         form = MD5Form(request.POST, request.FILES)
-        if form.is_valid() and form.cleaned_data.get('hash'):
+        if form.is_valid():
             if form.cleaned_data.get('input_text'):
-                print(str.encode(form.cleaned_data.get('input_text')))
+                ciphertext = form.cipher.hex_hash(form.cleaned_data.get('input_text').encode())
+                form.cleaned_data['output_hash'] = ciphertext
             elif form.cleaned_data.get('input_file'):
-                print(bytearray(request.FILES.get('input_file').read()))
+                ciphertext = form.cipher.hex_hash(request.FILES.get('input_file').read())
+                form.cleaned_data['output_hash'] = ciphertext
             else:
                 return HttpResponse('Invalid Request', status=400)
+        else:
+            return HttpResponse('Invalid Request', status=400)
     else:
         form = MD5Form({'input_type': 'text'})
 

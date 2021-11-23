@@ -2,6 +2,7 @@ from django import forms
 from .cipher_classes.vigenere import VigenereCipher
 from .cipher_classes.rsa import RSACipher
 from .cipher_classes.des import DESCipher
+from .cipher_classes.md5 import MD5
 from . import constants
 import re
 
@@ -13,7 +14,7 @@ class VigenereForm(forms.Form):
     encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
 
     def clean(self):
-        cleaned_data = self.cleaned_data
+        cleaned_data = super(VigenereForm, self).clean()
         if 'encrypt' in self.data:
             valid_chars_in_fields(self, ['key', 'decrypted_text'])
             fields_required(self, ['key', 'decrypted_text'], "This field is required when encrypting.")
@@ -39,7 +40,7 @@ class DESForm(forms.Form):
     encrypted_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
 
     def clean(self):
-        cleaned_data = self.cleaned_data
+        cleaned_data = super(DESForm, self).clean()
         input_type = cleaned_data.get('input_type', 'text')
         if 'encrypt' in self.data:
             fields_required(self, ['key', f'decrypted_{input_type}'], "This field is required when encrypting.")
@@ -60,7 +61,7 @@ class RSAForm(forms.Form):
     encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
 
     def clean(self):
-        cleaned_data = self.cleaned_data
+        cleaned_data = super(RSAForm, self).clean()
         if 'encrypt' in self.data:
             fields_required(self, ['public_key', 'decrypted_text'], "This field is required when encrypting.")
         elif 'decrypt' in self.data:
@@ -78,6 +79,7 @@ class RSAForm(forms.Form):
 
 
 class MD5Form(forms.Form):
+    cipher = MD5()
     CHOICES = [('text', 'Text Input'),
                ('file', 'File Input')]
     input_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': 'form-check-input'}))
@@ -89,14 +91,14 @@ class MD5Form(forms.Form):
                                                                                'readonly': 'readonly'}))
 
     def clean(self):
-        cleaned_data = self.cleaned_data
+        cleaned_data = super(MD5Form, self).clean()
         if self.data.get('hash'):
             input_type = cleaned_data.get('input_type', 'text')
             fields_required(self, [f'input_{input_type}'], "This field is required when hashing.")
             if input_type == 'text':
-                print('temp text')
+                pass
             elif input_type == 'file':
-                print('temp file)')
+                pass
             else:
                 self.add_error('', "At least one input field must be filled out.")
         return cleaned_data
