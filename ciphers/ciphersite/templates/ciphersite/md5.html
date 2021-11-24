@@ -6,25 +6,9 @@
     enctype="multipart/form-data"
 {% endblock form_tag_params %}
 
-{% block before_fields %}
-<!--
-    <div class="form-check">
-    <input class="form-check-input" type="radio" name="inputTypeRadio" id="flex" checked>
-    <label class="form-check-label" for="flexRadioDefault1">
-    Default radio
-    </label>
-</div>
-<div class="form-check">
-    <input class="form-check-input" type="radio" name="inputTypeRadio" id="flexRadioDefault2">
-    <label class="form-check-label" for="flexRadioDefault2">
-    Default checked radio
-    </label>
-</div>-->
-{% endblock before_fields %}
-
 {% block submit_row %}
     <div class="d-grid">
-        <button type="submit" name="hash" value="hash" class="btn btn-primary btn-block">Hash</button>
+        <button type="submit" id="hash_button" name="hash" value="hash" class="btn btn-primary btn-block">Hash</button>
     </div>
 {% endblock submit_row %}
 
@@ -45,6 +29,11 @@
                 $("#id_input_file_container").hide();
                 $("#id_input_text_container").show();
             }
+        });
+
+        $("#hash_button").click(function() {
+            $("#id_output_hash").html("");
+            $(this).html("Hashing...");
         });
     });
 </script>

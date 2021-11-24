@@ -104,8 +104,6 @@ def md5(request):
                 form.cleaned_data['output_hash'] = ciphertext
             else:
                 return HttpResponse('Invalid Request', status=400)
-        else:
-            return HttpResponse('Invalid Request', status=400)
     else:
         form = MD5Form({'input_type': 'text'})
 

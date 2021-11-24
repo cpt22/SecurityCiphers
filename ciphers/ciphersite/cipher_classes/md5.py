@@ -58,7 +58,6 @@ class MD5:
 
         # duplicate the initial values into a new arr
         segments = MD5.initial_counter_values[:]
-
         # Loop through all of the data in 512 bit (64 byte, hence the 64 step) chunks
         for chunk_512 in range(0, len(data), 64):
             a, b, c, d = segments

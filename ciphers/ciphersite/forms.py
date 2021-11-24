@@ -85,7 +85,8 @@ class MD5Form(forms.Form):
     input_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': 'form-check-input'}))
     input_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '4',
                                                                               'class': 'form-control'}))
-    input_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+    input_file = forms.FileField(required=False, label="Input file (10mb max)",
+                                 widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
     output_hash = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '2',
                                                                                'class': 'form-control',
                                                                                'readonly': 'readonly'}))
