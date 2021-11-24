@@ -3,7 +3,7 @@ import hmac
 import json
 import subprocess
 import random
-import base64
+import os
 from ciphers import settings
 from decouple import config
 from django.shortcuts import render
@@ -51,17 +51,29 @@ def des(request):
                 if form.cleaned_data.get('input_type') == 'file':
                     file = request.FILES.get('decrypted_file')
                     filename = file.name + '.enc'
-                    print("Before")
-                    output = form.cipher.encrypt(file.read(), form.cleaned_data['key'].encode())
-                    print("after")
-                    print(output)
+                    output = form.cipher.encrypt(file.read(), form.cleaned_data['key'].encode()).hex()
+                    response = HttpResponse(output, content_type="application/octet-stream")
+                    response['Content-Disposition'] = 'inline; filename=' + filename
+                    return response
                 else:
                     ciphertext = form.cipher.encrypt(form.cleaned_data['decrypted_text'].encode(),
                                                      form.cleaned_data['key'].encode())
                     form.cleaned_data['encrypted_text'] = ciphertext.hex()
             elif 'decrypt' in vals:
                 if form.cleaned_data.get('input_type') == 'file':
-                    pass
+                    file = request.FILES.get('encrypted_file')
+                    filename = file.name
+                    filename = filename[::-1].replace('cne.', '', 1)[::-1]
+                    fs = file.read()
+                    output = form.cipher.decrypt(fs, form.cleaned_data['key'].encode())
+                    print(output)
+                    f = open('/tmp/out', 'wb')
+                    f.write(output)
+                    f.close()
+                    f = open('/tmp/out')
+                    response = HttpResponse(output, content_type="application/octet-stream")
+                    response['Content-Disposition'] = 'inline; filename=' + filename
+                    return response
                 else:
                     try:
                         input_arr = bytearray.fromhex(form.cleaned_data['encrypted_text'])
