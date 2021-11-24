@@ -89,7 +89,7 @@ class DESCipher:
             column_str = ''.join(format(str(i)) for i in part[1:5])
             column_int = int(column_str, 2)
             s_box_int = self.s_box_table[s_box_index][row_int][column_int]
-            for i in format(s_box_int, 'b').zfill(4):   # potentially do differently
+            for i in format(s_box_int, 'b').zfill(4):
                 arr_32.append(int(i))
             s_box_index += 1
             index += 6
