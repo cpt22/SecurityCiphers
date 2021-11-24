@@ -2,6 +2,10 @@
 
 {% block title %}DES Cipher{% endblock title %}
 
+{% block form_tag_params %}
+    enctype="multipart/form-data"
+{% endblock form_tag_params %}
+
 {% block insert_block_after_field %}
     {% if field.name == 'key' %}
         <div class="mb-3">

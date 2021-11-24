@@ -7,7 +7,11 @@
     {% csrf_token %}
     {% block fields_loop %}
         {% block non_field_error_section %}
-            {{ form.non_field_errors }}
+            <div class="mb-3">
+            {% for error in form.non_field_errors %}
+                <label class="text-danger">{{ error }}</label><br>
+            {% endfor %}
+            </div>
         {% endblock non_field_error_section %}
 
         {% block before_fields %}{% endblock before_fields %}

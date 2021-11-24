@@ -43,19 +43,34 @@ def des(request):
     if request.method == 'POST':
         vals = request.POST
         form = DESForm(request.POST, request.FILES)
-        print("test")
         if form.is_valid():
             if 'generate_key' in vals:
-                form.cleaned_data['key'] = f'PLACEHOLDER_KEY_{random.randint(10000,99999)}'
+                if form.cleaned_data.get('key') == '':
+                    form.cleaned_data['key'] = f'PLACEHOLDER_KEY_{random.randint(10000,99999)}'
             elif 'encrypt' in vals:
-                ciphertext = form.cipher.encrypt(form.cleaned_data['decrypted_text'].encode(), form.cleaned_data['key'].encode())
-                form.cleaned_data['encrypted_text'] = ciphertext.hex()
-                print("encrypt")
+                if form.cleaned_data.get('input_type') == 'file':
+                    file = request.FILES.get('decrypted_file')
+                    filename = file.name + '.enc'
+                    print("Before")
+                    output = form.cipher.encrypt(file.read(), form.cleaned_data['key'].encode())
+                    print("after")
+                    print(output)
+                else:
+                    ciphertext = form.cipher.encrypt(form.cleaned_data['decrypted_text'].encode(),
+                                                     form.cleaned_data['key'].encode())
+                    form.cleaned_data['encrypted_text'] = ciphertext.hex()
             elif 'decrypt' in vals:
-                input_arr = bytearray.fromhex(form.cleaned_data['encrypted_text'])
-                ciphertext = form.cipher.decrypt(input_arr, form.cleaned_data['key'].encode())
-                form.cleaned_data['decrypted_text'] = ciphertext.decode()
-                print("decrypt")
+                if form.cleaned_data.get('input_type') == 'file':
+                    pass
+                else:
+                    try:
+                        input_arr = bytearray.fromhex(form.cleaned_data['encrypted_text'])
+                        ciphertext = form.cipher.decrypt(input_arr, form.cleaned_data['key'].encode())
+                        form.cleaned_data['decrypted_text'] = ciphertext.decode()
+                    except BaseException:
+                        form.add_error('', 'There was an error decrypting this text. ' + \
+                                           'Please ensure the values you have entered are valid')
+                        pass
             else:
                 return HttpResponse('Invalid Request', status=400)
     else:
