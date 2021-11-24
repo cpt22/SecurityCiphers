@@ -96,11 +96,7 @@ class DESCipher:
         return arr_32
 
     # Message and key inputs are arrays of binary (64 bits)
-    def des(self, message, key, input_range):
-        # Generate 16 keys
-        self.generate_keys(key)
-
-        # Start DES
+    def des(self, message, input_range):
         # Step 1: perform initial permutation
         initial_perm = self.permute(message, self.IP_table)
 
@@ -134,10 +130,13 @@ class DESCipher:
         return self.permute(final_64, self.FP_table)
 
     def des_helper(self, message_bit_arr, key_bit_arr, input_range):
+        # Generate 16 keys
+        self.generate_keys(key_bit_arr)
+
         final_bin = []
         index = 64
         while index <= len(message_bit_arr):
-            bin_arr = self.des(message_bit_arr[index - 64:index], key_bit_arr, input_range)
+            bin_arr = self.des(message_bit_arr[index - 64:index], input_range)
             final_bin += bin_arr
             index += 64
         # Add padding if not all bytes were covered
@@ -145,7 +144,7 @@ class DESCipher:
             pad_message_bit_arr = message_bit_arr[index-64:]
             while len(pad_message_bit_arr) != 64:
                 pad_message_bit_arr.append(0)
-            bin_arr = self.des(pad_message_bit_arr, key_bit_arr, input_range)
+            bin_arr = self.des(pad_message_bit_arr, input_range)
             final_bin += bin_arr
         return self.bit_array_to_byte_array(final_bin)
 

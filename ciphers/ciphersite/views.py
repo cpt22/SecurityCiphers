@@ -64,13 +64,12 @@ def des(request):
                     file = request.FILES.get('encrypted_file')
                     filename = file.name
                     filename = filename[::-1].replace('cne.', '', 1)[::-1]
-                    fs = file.read()
-                    output = form.cipher.decrypt(fs, form.cleaned_data['key'].encode())
-                    print(output)
-                    f = open('/tmp/out', 'wb')
-                    f.write(output)
-                    f.close()
-                    f = open('/tmp/out')
+                    fs = file.read().decode()
+                    output = form.cipher.decrypt(bytearray.fromhex(fs), form.cleaned_data['key'].encode()).decode()     # remove decode for non text files
+                    # f = open('C:/Users/anika', 'wb')
+                    # f.write(output)
+                    # f.close()
+                    # #f = open('/tmp/out')
                     response = HttpResponse(output, content_type="application/octet-stream")
                     response['Content-Disposition'] = 'inline; filename=' + filename
                     return response
