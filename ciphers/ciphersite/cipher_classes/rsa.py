@@ -16,11 +16,12 @@ class RSACipher:
         return private_key, public_key
 
     def encrypt(self, input_string, public_key):
-        input_bytes_arr = input_string.encode()
+        # input_bytes_arr = input_string.encode()
         output = []
-        for byte in input_bytes_arr:
-            # output.append(pow(byte, public_key[0]) % public_key[1]) <-- This is fine for small x^k (mod m)
-            output.append(self.successive_square(byte, public_key[0], public_key[1]))
+        for byte in input_string:
+            # print(byte)
+            output.append(pow(ord(byte), public_key[0]) % public_key[1]) #<-- This is fine for small x^k (mod m)
+            #output.append(self.successive_square(byte, public_key[0], public_key[1]))
         return ",".join([str(i) for i in output])
 
     def decrypt(self, encrypted_string, private_key):
