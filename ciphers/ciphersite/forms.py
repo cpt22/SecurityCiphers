@@ -10,8 +10,10 @@ import re
 class VigenereForm(forms.Form):
     cipher = VigenereCipher()
     key = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    decrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
-    encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
+    decrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
+                                                                                  'rows': '5'}))
+    encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
+                                                                                  'rows': '5'}))
 
     def clean(self):
         cleaned_data = super(VigenereForm, self).clean()
@@ -57,8 +59,10 @@ class RSAForm(forms.Form):
     cipher = RSACipher()
     public_key = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     private_key = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    decrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
-    encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))
+    decrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
+                                                                                  'rows': '5'}))
+    encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control',
+                                                                                  'rows': '5'}))
 
     def clean(self):
         cleaned_data = super(RSAForm, self).clean()
