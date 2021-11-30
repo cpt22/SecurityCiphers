@@ -34,12 +34,14 @@ class DESForm(forms.Form):
     CHOICES = [('text', 'Text Input'),
                ('file', 'File Input')]
     input_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': 'form-check-input'}))
-    decrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '5',
+    decrypted_text = forms.CharField(required=False, label="Plain Text", widget=forms.Textarea(attrs={'rows': '5',
                                                                               'class': 'form-control'}))
-    decrypted_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
-    encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '5',
+    decrypted_file = forms.FileField(required=False, label="File", widget=forms.ClearableFileInput(
+                                                                                    attrs={'class': 'form-control'}))
+    encrypted_text = forms.CharField(required=False, label="Cipher Text", widget=forms.Textarea(attrs={'rows': '5',
                                                                               'class': 'form-control'}))
-    encrypted_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+    encrypted_file = forms.FileField(required=False, label="Encrypted File", widget=forms.ClearableFileInput(
+                                                                                    attrs={'class': 'form-control'}))
 
     def clean(self):
         cleaned_data = super(DESForm, self).clean()
