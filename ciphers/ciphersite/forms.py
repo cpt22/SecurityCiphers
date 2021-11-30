@@ -32,20 +32,22 @@ class DESForm(forms.Form):
     CHOICES = [('text', 'Text Input'),
                ('file', 'File Input')]
     input_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': 'form-check-input'}))
-    decrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '5',
+    decrypted_text = forms.CharField(required=False, label="Plain Text", widget=forms.Textarea(attrs={'rows': '5',
                                                                               'class': 'form-control'}))
-    decrypted_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
-    encrypted_text = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '5',
+    decrypted_file = forms.FileField(required=False, label="File", widget=forms.ClearableFileInput(
+                                                                                    attrs={'class': 'form-control'}))
+    encrypted_text = forms.CharField(required=False, label="Cipher Text", widget=forms.Textarea(attrs={'rows': '5',
                                                                               'class': 'form-control'}))
-    encrypted_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+    encrypted_file = forms.FileField(required=False, label="Encrypted File", widget=forms.ClearableFileInput(
+                                                                                    attrs={'class': 'form-control'}))
 
     def clean(self):
         cleaned_data = super(DESForm, self).clean()
         input_type = cleaned_data.get('input_type', 'text')
         if 'encrypt' in self.data:
-            fields_required(self, ['key', f'decrypted_{input_type}'], "This field is required when encrypting.")
+            fields_required(self, ['key', f'plain_{input_type}'], "This field is required when encrypting.")
         elif 'decrypt' in self.data:
-            fields_required(self, ['key', f'encrypted_{input_type}'], "This field is required when decrypting.")
+            fields_required(self, ['key', f'cipher_{input_type}'], "This field is required when decrypting.")
         elif 'generate_key' in self.data:
             pass
         else:
