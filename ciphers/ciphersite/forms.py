@@ -45,9 +45,9 @@ class DESForm(forms.Form):
         cleaned_data = super(DESForm, self).clean()
         input_type = cleaned_data.get('input_type', 'text')
         if 'encrypt' in self.data:
-            fields_required(self, ['key', f'plain_{input_type}'], "This field is required when encrypting.")
+            fields_required(self, ['key', f'decrypted_{input_type}'], "This field is required when encrypting.")
         elif 'decrypt' in self.data:
-            fields_required(self, ['key', f'cipher_{input_type}'], "This field is required when decrypting.")
+            fields_required(self, ['key', f'encrypted_{input_type}'], "This field is required when decrypting.")
         elif 'generate_key' in self.data:
             pass
         else:
