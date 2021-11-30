@@ -3,6 +3,7 @@ import hmac
 import json
 import subprocess
 import random
+import string
 from ciphers import settings
 from decouple import config
 from django.shortcuts import render
@@ -44,8 +45,10 @@ def des(request):
         form = DESForm(request.POST, request.FILES)
         if form.is_valid():
             if 'generate_key' in vals:
-                #if form.cleaned_data.get('key') == '':
-                form.cleaned_data['key'] = f'PLACEHOLDER_KEY_{random.randint(10000,99999)}'
+                form.cleaned_data['key'] = x = ''.join(random.choice(string.ascii_uppercase +
+                                                                     string.ascii_lowercase +
+                                                                     string.digits) for _ in range(8))
+                #form.cleaned_data['key'] = f'PLACEHOLDER_KEY_{random.randint(10000,99999)}'
             elif 'encrypt' in vals:
                 if form.cleaned_data.get('input_type') == 'file':
                     file = request.FILES.get('decrypted_file')

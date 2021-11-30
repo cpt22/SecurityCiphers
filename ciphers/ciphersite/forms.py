@@ -30,22 +30,25 @@ class VigenereForm(forms.Form):
 
 class DESForm(forms.Form):
     cipher = DESCipher()
-    key = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    key = forms.CharField(required=False, label="Key (8 Characters: 0-9,a-z,A-Z)",
+                          min_length=8, max_length=8,
+                          widget=forms.TextInput(attrs={'class': 'form-control'}))
     CHOICES = [('text', 'Text Input'),
                ('file', 'File Input')]
     input_type = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': 'form-check-input'}))
     decrypted_text = forms.CharField(required=False, label="Plain Text", widget=forms.Textarea(attrs={'rows': '5',
                                                                               'class': 'form-control'}))
-    decrypted_file = forms.FileField(required=False, label="File", widget=forms.ClearableFileInput(
+    decrypted_file = forms.FileField(required=False, label="File (500k max)", widget=forms.ClearableFileInput(
                                                                                     attrs={'class': 'form-control'}))
     encrypted_text = forms.CharField(required=False, label="Cipher Text", widget=forms.Textarea(attrs={'rows': '5',
                                                                               'class': 'form-control'}))
-    encrypted_file = forms.FileField(required=False, label="Encrypted File", widget=forms.ClearableFileInput(
+    encrypted_file = forms.FileField(required=False, label="Encrypted File (500k max)", widget=forms.ClearableFileInput(
                                                                                     attrs={'class': 'form-control'}))
 
     def clean(self):
         cleaned_data = super(DESForm, self).clean()
         input_type = cleaned_data.get('input_type', 'text')
+
         if 'encrypt' in self.data:
             fields_required(self, ['key', f'decrypted_{input_type}'], "This field is required when encrypting.")
         elif 'decrypt' in self.data:
@@ -54,6 +57,8 @@ class DESForm(forms.Form):
             pass
         else:
             pass
+        if 'generate_key' not in self.data:
+            valid_chars_in_fields(self, ['key'], characters='0-9a-zA-Z')
         return cleaned_data
 
 
