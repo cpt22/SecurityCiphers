@@ -1,10 +1,8 @@
-import binascii
 import hashlib
 import hmac
 import json
 import subprocess
 import random
-import os
 from ciphers import settings
 from decouple import config
 from django.shortcuts import render
@@ -65,8 +63,8 @@ def des(request):
                     file = request.FILES.get('encrypted_file')
                     filename = file.name
                     filename = filename[::-1].replace('cne.', '', 1)[::-1]
-                    fs = file.read().decode()   # in hex
-                    output = form.cipher.decrypt(bytearray.fromhex(fs), form.cleaned_data['key'].encode())     # remove decode for non text files
+                    fs = file.read().decode()
+                    output = form.cipher.decrypt(bytearray.fromhex(fs), form.cleaned_data['key'].encode())
                     response = HttpResponse(bytes(output), content_type="application/octet-stream")
                     response['Content-Disposition'] = 'inline; filename=' + filename
                     return response
