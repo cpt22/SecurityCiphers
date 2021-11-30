@@ -44,8 +44,8 @@ def des(request):
         form = DESForm(request.POST, request.FILES)
         if form.is_valid():
             if 'generate_key' in vals:
-                if form.cleaned_data.get('key') == '':
-                    form.cleaned_data['key'] = f'PLACEHOLDER_KEY_{random.randint(10000,99999)}'
+                #if form.cleaned_data.get('key') == '':
+                form.cleaned_data['key'] = f'PLACEHOLDER_KEY_{random.randint(10000,99999)}'
             elif 'encrypt' in vals:
                 if form.cleaned_data.get('input_type') == 'file':
                     file = request.FILES.get('decrypted_file')
