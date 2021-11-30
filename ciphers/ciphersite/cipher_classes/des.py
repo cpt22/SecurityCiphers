@@ -56,6 +56,7 @@ class DESCipher:
     keys = []
 
     def generate_keys(self, key):
+        self.keys = []
         # Step 1: permute to 56 bits
         key_56 = self.permute(key, self.key_table_56)
         # Step 2: chop key in half
