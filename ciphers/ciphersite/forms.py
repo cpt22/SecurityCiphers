@@ -40,7 +40,7 @@ class DESForm(forms.Form):
                                                                               'class': 'form-control'}))
     decrypted_file = forms.FileField(required=False, label="File (500k max)", widget=forms.ClearableFileInput(
                                                                                     attrs={'class': 'form-control'}))
-    encrypted_text = forms.CharField(required=False, label="Cipher Text", widget=forms.Textarea(attrs={'rows': '5',
+    encrypted_text = forms.CharField(required=False, label="Cipher Hexadecimal", widget=forms.Textarea(attrs={'rows': '5',
                                                                               'class': 'form-control'}))
     encrypted_file = forms.FileField(required=False, label="Encrypted File (500k max)", widget=forms.ClearableFileInput(
                                                                                     attrs={'class': 'form-control'}))
