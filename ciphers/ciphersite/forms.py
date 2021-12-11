@@ -30,7 +30,7 @@ class VigenereForm(forms.Form):
 
 class DESForm(forms.Form):
     cipher = DESCipher()
-    key = forms.CharField(required=False, label="Key (8 Characters: 0-9,a-z,A-Z)",
+    key = forms.CharField(required=False, label="Key (8 Characters: 0-9,a-z,A-Z, and ascii symbols)",
                           min_length=8, max_length=8,
                           widget=forms.TextInput(attrs={'class': 'form-control'}))
     CHOICES = [('text', 'Text Input'),
