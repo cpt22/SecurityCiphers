@@ -58,7 +58,7 @@ class DESForm(forms.Form):
         else:
             pass
         if 'generate_key' not in self.data:
-            valid_chars_in_fields(self, ['key'], characters='0-9a-zA-Z')
+            valid_chars_in_fields(self, ['key'], characters=' -~')
         return cleaned_data
 
 
